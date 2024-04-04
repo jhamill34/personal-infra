@@ -52,3 +52,19 @@ module "writer-access-point" {
   actions   = ["s3:PutObject"]
   prefix    = "datadog"
 }
+
+module "test-cluster" {
+  source = "./modules/cluster"
+  name   = "terraform-cluster"
+}
+
+module "jhamill-service-web" {
+  source = "./modules/container_repo"
+  name   = "jhamill-service-web"
+}
+
+module "jhamill-service-vpc" {
+  source = "./modules/vpc"
+  name   = "jhamill-service-vpc"
+}
+

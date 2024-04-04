@@ -1,11 +1,3 @@
-variable "bucket_name" {
-  type = string
-}
-
-variable "account_id" {
-  type = string
-}
-
 resource "aws_s3_bucket" "bucket" {
   bucket = var.bucket_name
 }
@@ -96,8 +88,3 @@ data "aws_iam_policy_document" "bucket-policy" {
     }
   }
 }
-
-output "bucket_id" {
-  value = aws_s3_bucket.bucket.id
-}
-
