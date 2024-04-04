@@ -68,3 +68,23 @@ module "jhamill-service-vpc" {
   name   = "jhamill-service-vpc"
 }
 
+module "jhamill-service-subnet-az-1" {
+  source                = "./modules/subnets"
+  name                  = "jhamill-service-subnet-az-1"
+  availability_zone     = "us-west-2a"
+  vpc_id                = module.jhamill-service-vpc.vpc_id
+  public_cidr_block     = "10.0.1.0/24"
+  private_cidr_block    = "10.0.2.0/24"
+  public_route_table_id = module.jhamill-service-vpc.public_route_table_id
+}
+
+module "jhamill-service-subnet-az-2" {
+  source                = "./modules/subnets"
+  name                  = "jhamill-service-subnet-az-1"
+  availability_zone     = "us-west-2b"
+  vpc_id                = module.jhamill-service-vpc.vpc_id
+  public_cidr_block     = "10.0.3.0/24"
+  private_cidr_block    = "10.0.4.0/24"
+  public_route_table_id = module.jhamill-service-vpc.public_route_table_id
+}
+
