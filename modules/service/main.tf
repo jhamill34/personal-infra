@@ -14,6 +14,10 @@ variable "listener_arn" {
   type = string
 }
 
+variable "health_check_path" {
+  type = string
+}
+
 resource "aws_ecs_task_definition" "dummy" {
   family = "dummy"
 
@@ -62,7 +66,7 @@ resource "aws_alb_target_group" "svc" {
   vpc_id   = var.vpc_id
 
   health_check {
-    path = "/status"
+    path = var.health_check_path
   }
 }
 

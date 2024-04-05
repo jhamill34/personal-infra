@@ -132,10 +132,11 @@ module "test-cluster" {
 }
 
 module "jhamill-service-web-service" {
-  source       = "./modules/service"
-  name         = "web"
-  cluster_id   = module.test-cluster.cluster_id
-  vpc_id       = module.jhamill-service-vpc.vpc_id
-  listener_arn = module.jhamill-service-lb.listener_arn
+  source            = "./modules/service"
+  name              = "web"
+  cluster_id        = module.test-cluster.cluster_id
+  vpc_id            = module.jhamill-service-vpc.vpc_id
+  listener_arn      = module.jhamill-service-lb.listener_arn
+  health_check_path = "/greet"
 }
 
