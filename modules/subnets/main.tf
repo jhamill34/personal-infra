@@ -14,14 +14,20 @@ resource "aws_route_table_association" "public" {
   route_table_id = var.public_route_table_id
 }
 
-resource "aws_subnet" "private" {
-  vpc_id = var.vpc_id
+// NOTE: the appeal to a private subnet is clear
+// and if our hosts didn't need to access the internet this would be great!
+// however, our hosts need to talk to ECS (we could technically use a VPC endpoint) and 
+// in general we want to be able to access the internet for updates, etc. 
+// to accomplish this we need to use a NAT Gateway which is far to costly for this example (~ $32.00/month)
 
-  cidr_block        = var.private_cidr_block
-  availability_zone = var.availability_zone
-
-  tags = {
-    Name = "${var.name}-private"
-  }
-}
+//resource "aws_subnet" "private" {
+//  vpc_id = var.vpc_id
+//
+//  cidr_block        = var.private_cidr_block
+//  availability_zone = var.availability_zone
+//
+//  tags = {
+//    Name = "${var.name}-private"
+//  }
+//}
 

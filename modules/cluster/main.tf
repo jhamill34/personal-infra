@@ -22,3 +22,7 @@ resource "aws_ecs_cluster_capacity_providers" "cluster_capacity_providers" {
   cluster_name       = aws_ecs_cluster.cluster.name
   capacity_providers = [aws_ecs_capacity_provider.capacity_provider.name]
 }
+
+output "cluster_id" {
+  value = aws_ecs_cluster.cluster.id
+}

@@ -1,0 +1,7 @@
+- [ ] DNS records (round robin to public IPs?)
+- [ ] SSL certificate
+- [ ] Buckets for static sits / assets
+- [ ] NAT gateway for private subnets
+- [ ] ALB in the public subnet for ecs containers
+- [ ] Database in EC2 for now in private subnet
+- [ ] NGINX in EC2 for now in public subnet to route to ECS

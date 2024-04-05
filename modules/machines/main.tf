@@ -6,12 +6,8 @@ variable "security_group_id" {
   type = string
 }
 
-variable "subnet_id" {
-  type = string
-}
-
-variable "public" {
-  type = bool
+variable "subnet_ids" {
+  type = list(string)
 }
 
 variable "instance_profile" {
@@ -43,9 +39,8 @@ resource "aws_launch_template" "this" {
   key_name = "jhamill-macbook"
 
   network_interfaces {
-    subnet_id                   = var.subnet_id
     security_groups             = [var.security_group_id]
-    associate_public_ip_address = var.public
+    associate_public_ip_address = true
   }
 
   iam_instance_profile {
@@ -60,9 +55,11 @@ resource "aws_launch_template" "this" {
 }
 
 resource "aws_autoscaling_group" "this" {
-  desired_capacity = 2
-  min_size         = 2
-  max_size         = 2
+  desired_capacity = 3
+  min_size         = 3
+  max_size         = 3
+
+  vpc_zone_identifier = var.subnet_ids
 
   launch_template {
     id      = aws_launch_template.this.id
