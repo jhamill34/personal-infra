@@ -53,42 +53,50 @@ module "writer-access-point" {
   prefix    = "datadog"
 }
 
-module "test-cluster" {
-  source = "./modules/cluster"
-  name   = "terraform-cluster"
-}
-
 module "jhamill-service-web" {
   source = "./modules/container_repo"
   name   = "jhamill-service-web"
 }
 
-module "jhamill-service-vpc" {
-  source = "./modules/vpc"
-  name   = "jhamill-service-vpc"
-}
-
-module "jhamill-service-subnet-az-1" {
-  source                = "./modules/subnets"
-  name                  = "jhamill-service-subnet-az-1"
-  availability_zone     = "us-west-2a"
-  vpc_id                = module.jhamill-service-vpc.vpc_id
-  public_cidr_block     = "10.0.1.0/24"
-  private_cidr_block    = "10.0.2.0/24"
-  public_route_table_id = module.jhamill-service-vpc.public_route_table_id
-}
-
-module "jhamill-service-service-groups" {
-  source      = "./modules/security_groups"
-  name_prefix = "jhamill-service"
-  vpc_id      = module.jhamill-service-vpc.vpc_id
-}
-
-module "jhamill-service-machines" {
-  source            = "./modules/machines"
-  name_prefix       = "jhamill-service"
-  security_group_id = module.jhamill-service-service-groups.webserver_sg_id
-  subnet_id         = module.jhamill-service-subnet-az-1.public_subnet_id
-  public            = true
-}
-
+# module "jhamill-service-vpc" {
+#   source = "./modules/vpc"
+#   name   = "jhamill-service-vpc"
+# }
+#
+# module "jhamill-service-subnet-az-1" {
+#   source                = "./modules/subnets"
+#   name                  = "jhamill-service-subnet-az-1"
+#   availability_zone     = "us-west-2a"
+#   vpc_id                = module.jhamill-service-vpc.vpc_id
+#   public_cidr_block     = "10.0.1.0/24"
+#   private_cidr_block    = "10.0.2.0/24"
+#   public_route_table_id = module.jhamill-service-vpc.public_route_table_id
+# }
+#
+# module "jhamill-service-security-groups" {
+#   source      = "./modules/security_groups"
+#   name_prefix = "jhamill-service"
+#   vpc_id      = module.jhamill-service-vpc.vpc_id
+# }
+#
+# module "jhamill-services-machine-role" {
+#   source = "./modules/service_role"
+#   name   = "jhamill-service-machine-role"
+# }
+#
+# module "jhamill-service-machines" {
+#   source            = "./modules/machines"
+#   name_prefix       = "jhamill-service"
+#   security_group_id = module.jhamill-service-security-groups.webserver_sg_id
+#   subnet_id         = module.jhamill-service-subnet-az-1.public_subnet_id
+#   public            = true
+#   instance_profile  = module.jhamill-services-machine-role.profile_name
+#   ecs_cluster_name  = "jhamill-service-cluster"
+# }
+#
+# module "test-cluster" {
+#   source                = "./modules/cluster"
+#   name                  = "jhamill-service-cluster"
+#   autoscaling_group_arn = module.jhamill-service-machines.autoscaling_arn
+# }
+#
