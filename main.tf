@@ -90,6 +90,17 @@ module "jhamill-service-subnet-az-3" {
   public_route_table_id = module.jhamill-service-vpc.public_route_table_id
 }
 
+module "jhamill-service-lb" {
+  source            = "./modules/load_balancer"
+  name              = "jhamill-service-lb"
+  security_group_id = module.jhamill-service-security-groups.loadbalancer_sg_id
+  subnet_ids = [
+    module.jhamill-service-subnet-az-1.public_subnet_id,
+    module.jhamill-service-subnet-az-2.public_subnet_id,
+    module.jhamill-service-subnet-az-3.public_subnet_id,
+  ]
+}
+
 module "jhamill-service-security-groups" {
   source      = "./modules/security_groups"
   name_prefix = "jhamill-service"
@@ -121,8 +132,10 @@ module "test-cluster" {
 }
 
 module "jhamill-service-web-service" {
-  source     = "./modules/service"
-  name       = "web"
-  cluster_id = module.test-cluster.cluster_id
+  source       = "./modules/service"
+  name         = "web"
+  cluster_id   = module.test-cluster.cluster_id
+  vpc_id       = module.jhamill-service-vpc.vpc_id
+  listener_arn = module.jhamill-service-lb.listener_arn
 }
 
