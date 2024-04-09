@@ -94,6 +94,12 @@ resource "aws_cloudfront_distribution" "website" {
     response_page_path = "/index.html"
   }
 
+  custom_error_response {
+    error_code         = 403
+    response_code      = 200
+    response_page_path = "/index.html"
+  }
+
   viewer_certificate {
     acm_certificate_arn = module.website_certificate.certificate_arn
     ssl_support_method  = "sni-only"
