@@ -1,3 +1,8 @@
+//
+// Defines an ECS cluster with a capacity provider defined by the ARN 
+// of the provided autoscaling group.
+//
+
 resource "aws_ecs_cluster" "cluster" {
   name = var.name
 }
@@ -7,13 +12,12 @@ resource "aws_ecs_capacity_provider" "capacity_provider" {
 
   auto_scaling_group_provider {
     auto_scaling_group_arn = var.autoscaling_group_arn
-    // managed_termination_protection = "ENABLED"
 
     managed_scaling {
       maximum_scaling_step_size = 1
       minimum_scaling_step_size = 1
       status                    = "ENABLED"
-      target_capacity           = 2
+      target_capacity           = 50
     }
   }
 }

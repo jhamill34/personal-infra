@@ -1,20 +1,25 @@
 variable "name" {
-  type = string
+  type        = string
+  description = "Name of the S3 access point"
 }
 
 variable "bucket_id" {
-  type = string
+  type        = string
+  description = "ID of the S3 bucket to create the access point for"
 }
 
 variable "role_arn" {
-  type = string
+  type        = string
+  description = "ARN of the role to attach the policy to"
 }
 
 variable "actions" {
-  type = list(string)
+  type        = list(string)
+  description = "List of actions to allow the role to perform"
 }
 
 variable "prefix" {
-  type = string
+  type        = string
+  description = "Bucket Prefix to allow the role to access"
 }
 

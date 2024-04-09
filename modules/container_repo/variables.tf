@@ -1,4 +1,5 @@
 variable "name" {
-  type = string
+  type        = string
+  description = "A unique name for this cluster configuration"
 }
 

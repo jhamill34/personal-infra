@@ -1,3 +1,7 @@
+// 
+// Creates some standard security groups that we can use for our resources. 
+//
+
 resource "aws_security_group" "load_balancer" {
   vpc_id = var.vpc_id
   name   = "${var.name_prefix}-loadbalancer-sg"
@@ -63,11 +67,3 @@ resource "aws_vpc_security_group_egress_rule" "webserver_all" {
   security_group_id = aws_security_group.webserver.id
 }
 
-// resource "aws_security_group" "database" {
-//   vpc_id = var.vpc_id
-//   name   = "${var.name_prefix}-database-sg"
-//   tags = {
-//     Name = "${var.name_prefix}-database-sg"
-//   }
-// }
-// 

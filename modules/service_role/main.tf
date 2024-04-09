@@ -1,6 +1,9 @@
-variable "name" {
-  type = string
-}
+// 
+// Defines a custom role that allows our EC2 instances to make ECS calls 
+// which is required for ECS to work. When an EC2 instance is launched that 
+// has the ecsAgent this role allows the agent to register the instance with 
+// the ECS cluster by adding it to the capacity provider. 
+//
 
 resource "aws_iam_role" "ecs_role" {
   name               = var.name
@@ -28,10 +31,3 @@ resource "aws_iam_role_policy_attachment" "ecs_role" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
-output "role_name" {
-  value = aws_iam_role.ecs_role.name
-}
-
-output "profile_name" {
-  value = aws_iam_instance_profile.ecs_role.name
-}

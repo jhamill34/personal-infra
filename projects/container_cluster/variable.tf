@@ -3,8 +3,8 @@ variable "name" {
   description = "A unique name for this cluster configuration"
 }
 
-variable "autoscaling_group_arn" {
+variable "cidr_block" {
   type        = string
-  description = "The ARN of the autoscaling group to use for the capacity provider"
+  description = "The group of IP addresses we're going to use for the VPC"
 }
 

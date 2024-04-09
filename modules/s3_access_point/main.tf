@@ -1,3 +1,8 @@
+//
+// Create a new S3 access point that restricts public access and attach a policy to it
+// to allow a role to access objects with a specific prefix.
+//
+
 resource "aws_s3_access_point" "access_point" {
   name   = var.name
   bucket = var.bucket_id

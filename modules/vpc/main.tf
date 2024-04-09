@@ -1,5 +1,10 @@
+// 
+// Creates a VPC with an internet gateway and a route table that routes all traffic to the internet gateway
+// The ID for this route table is an output so we can attach it to our subnets
+//
+
 resource "aws_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.cidr_block
 
   tags = {
     Name = var.name

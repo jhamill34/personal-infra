@@ -1,14 +1,7 @@
-variable "name" {
-  type = string
-}
-
-variable "subnet_ids" {
-  type = list(string)
-}
-
-variable "security_group_id" {
-  type = string
-}
+//
+// Creates an external application load balancer with a fixed 404 response
+// we can attach a security group and subnets to the load balancer
+//
 
 resource "aws_lb" "alb" {
   name               = var.name
@@ -33,6 +26,3 @@ resource "aws_lb_listener" "alb" {
   }
 }
 
-output "listener_arn" {
-  value = aws_lb_listener.alb.arn
-}

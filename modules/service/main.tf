@@ -1,22 +1,8 @@
-variable "name" {
-  type = string
-}
-
-variable "cluster_id" {
-  type = string
-}
-
-variable "vpc_id" {
-  type = string
-}
-
-variable "listener_arn" {
-  type = string
-}
-
-variable "health_check_path" {
-  type = string
-}
+//
+// Creates a base ECS service that registers the container instances to
+// the configured ALB with a rule that forwards to this service based off off 
+// the configured path pattern. 
+//
 
 resource "aws_ecs_task_definition" "dummy" {
   family = "dummy"
@@ -56,7 +42,7 @@ resource "aws_ecs_service" "svc" {
 
   cluster         = var.cluster_id
   task_definition = aws_ecs_task_definition.dummy.id
-  desired_count   = 1
+  desired_count   = var.instances
 }
 
 resource "aws_alb_target_group" "svc" {
@@ -70,6 +56,8 @@ resource "aws_alb_target_group" "svc" {
   }
 }
 
+// TODO: Make this ruleset more modular friendly
+// I would like to define any ruleset that I want to apply to the ALB
 resource "aws_alb_listener_rule" "svc" {
   listener_arn = var.listener_arn
 

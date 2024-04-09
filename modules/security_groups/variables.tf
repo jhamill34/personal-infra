@@ -1,8 +1,10 @@
 variable "name_prefix" {
-  type = string
+  type        = string
+  description = "Prefix for the name of the resources"
 }
 
 variable "vpc_id" {
-  type = string
+  type        = string
+  description = "ID of the VPC to create the security groups in"
 }
 

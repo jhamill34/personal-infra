@@ -1,22 +1,8 @@
-variable "name_prefix" {
-  type = string
-}
-
-variable "security_group_id" {
-  type = string
-}
-
-variable "subnet_ids" {
-  type = list(string)
-}
-
-variable "instance_profile" {
-  type = string
-}
-
-variable "ecs_cluster_name" {
-  type = string
-}
+//
+// The auto scaling group that is responsible for maintaining a 
+// desired number of instances of the launch template. These 
+// instances will register themselves with the ECS cluster when they come up.
+//
 
 data "aws_ami" "this" {
   most_recent = true
@@ -34,13 +20,14 @@ data "aws_ami" "this" {
 resource "aws_launch_template" "this" {
   name_prefix   = var.name_prefix
   image_id      = data.aws_ami.this.id
-  instance_type = "t4g.micro"
+  instance_type = var.capacity_type
 
-  key_name = "jhamill-macbook"
+  // TODO: Add the key_name argument
+  // key_name = "jhamill-macbook"
 
   network_interfaces {
     security_groups             = [var.security_group_id]
-    associate_public_ip_address = true
+    associate_public_ip_address = var.public_ip
   }
 
   iam_instance_profile {
@@ -55,9 +42,9 @@ resource "aws_launch_template" "this" {
 }
 
 resource "aws_autoscaling_group" "this" {
-  desired_capacity = 3
-  min_size         = 3
-  max_size         = 3
+  desired_capacity = var.capacity
+  min_size         = var.capacity
+  max_size         = var.capacity
 
   vpc_zone_identifier = var.subnet_ids
 
@@ -73,6 +60,3 @@ resource "aws_autoscaling_group" "this" {
   }
 }
 
-output "autoscaling_arn" {
-  value = aws_autoscaling_group.this.arn
-}

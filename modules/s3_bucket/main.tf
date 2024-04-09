@@ -1,3 +1,10 @@
+// 
+// Creates a bucket that restricts public access, disables ACLs, enables versioning, 
+// applies server-side encryption, and enforces bucket ownership.
+// The bucket policy we attach also forces TLS connections and delgates all access to 
+// the access points. 
+//
+
 resource "aws_s3_bucket" "bucket" {
   bucket = var.bucket_name
 }
