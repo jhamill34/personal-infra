@@ -17,3 +17,7 @@ resource "aws_route53_record" "subdomain" {
   ttl     = 172800
   records = aws_route53_zone.subdomain.name_servers
 }
+
+output "zone_id" {
+  value = aws_route53_zone.subdomain.zone_id
+}

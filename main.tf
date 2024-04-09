@@ -17,7 +17,7 @@ terraform {
 provider "docker" {}
 
 provider "aws" {
-  region  = "us-west-2"
+  region  = "us-east-1"
   profile = "personal"
 }
 
@@ -34,8 +34,9 @@ module "blog_spedue_space" {
   subdomain      = "blog.spedue.space"
 }
 
-
 module "blog_spedue_space_site" {
-  source = "./modules/static_site"
-  name   = "blog-spedue-space"
+  source  = "./modules/static_site"
+  name    = "blog-spedue-space-website"
+  domain  = "blog.spedue.space"
+  zone_id = module.blog_spedue_space.zone_id
 }
