@@ -56,19 +56,3 @@ resource "aws_alb_target_group" "svc" {
   }
 }
 
-// TODO: Make this ruleset more modular friendly
-// I would like to define any ruleset that I want to apply to the ALB
-resource "aws_alb_listener_rule" "svc" {
-  listener_arn = var.listener_arn
-
-  action {
-    type             = "forward"
-    target_group_arn = aws_alb_target_group.svc.arn
-  }
-
-  condition {
-    path_pattern {
-      values = ["/*"]
-    }
-  }
-}

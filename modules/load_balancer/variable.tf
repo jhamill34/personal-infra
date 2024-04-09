@@ -13,3 +13,7 @@ variable "security_group_id" {
   description = "The security group to attach the load balancer to"
 }
 
+variable "internal" {
+  type    = bool
+  default = false
+}

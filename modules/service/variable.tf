@@ -13,11 +13,6 @@ variable "vpc_id" {
   description = "The vpc id"
 }
 
-variable "listener_arn" {
-  type        = string
-  description = "The listener arn"
-}
-
 variable "health_check_path" {
   type        = string
   description = "The health check path"

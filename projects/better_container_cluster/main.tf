@@ -41,8 +41,31 @@ module "service-security-groups" {
 module "service-lb" {
   source            = "../../modules/load_balancer"
   name              = "${var.name}-lb"
+  internal          = false
   security_group_id = module.service-security-groups.loadbalancer_sg_id
   subnet_ids        = [for subnet in module.service-subnet : subnet.public_subnet_id]
+}
+
+// 4a. Create an internal load balancer for our internal services
+module "service-internal-lb" {
+  source            = "../../modules/load_balancer"
+  name              = "${var.name}-internal-lb"
+  internal          = true
+  security_group_id = module.service-security-groups.loadbalancer_sg_id
+  subnet_ids        = [for subnet in module.service-subnet : subnet.private_subnet_id]
+}
+
+// 4b. Create a NAT gateway in each availability zone to allow our instances to talk to ECS
+// since we don't assign any public IP address to our instances anymore
+module "service-nat" {
+  count = length(local.subnet_groups)
+
+  source = "../../modules/nat_gateway"
+  name   = "${var.name}-nat-${count.index + 1}"
+  vpc_id = module.service-vpc.vpc_id
+
+  private_subnet_id = module.service-subnet[count.index].private_subnet_id
+  public_subnet_id  = module.service-subnet[count.index].public_subnet_id
 }
 
 // 5. Create an instance profile for our EC2 instances so that they can talk to ECS
@@ -52,20 +75,20 @@ module "services-machine-role" {
 }
 
 // 6. Create an auto scaling group that launches instances into the 
-// public subnets and attaches them to the ECS cluster. We also attach the 
+// private subnets and attaches them to the ECS cluster. We also attach the 
 // webserver security group so that they only accept traffic from load balancers 
-// and create outbound traffic on any port. We also allocate a public IP 
-// to our instances so that they can talk to ECS. 
+// and create outbound traffic on any port. We do NOT allocate a public IP 
+// to our instances, instead they will talk to a NAT gateway.
 module "service-machines" {
   source            = "../../modules/machines"
   name_prefix       = var.name
   security_group_id = module.service-security-groups.webserver_sg_id
-  subnet_ids        = [for subnet in module.service-subnet : subnet.public_subnet_id]
+  subnet_ids        = [for subnet in module.service-subnet : subnet.private_subnet_id]
   instance_profile  = module.services-machine-role.profile_name
   ecs_cluster_name  = "${var.name}-cluster"
   capacity          = length(local.subnet_groups)
   capacity_type     = "t4g.micro"
-  public_ip         = true
+  public_ip         = false
 }
 
 // 7. Create a cluster that our services will run in
@@ -110,3 +133,40 @@ resource "aws_alb_listener_rule" "web-service-listener-rule" {
   }
 }
 
+// 9a. Create a service registry for internal "app"
+module "service-app-registry" {
+  source = "../../modules/container_repo"
+  name   = "${var.name}-app"
+}
+
+// 9b. register the service in ecs
+module "service-app-service" {
+  source            = "../../modules/service"
+  name              = "app"
+  cluster_id        = module.test-cluster.cluster_id
+  vpc_id            = module.service-vpc.vpc_id
+  health_check_path = "/greet"
+  instances         = 1
+}
+
+resource "aws_alb_listener_rule" "app-service-listener-rule" {
+  listener_arn = module.service-internal-lb.listener_arn
+
+  action {
+    type             = "forward"
+    target_group_arn = module.service-app-service.target_group_arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/*"]
+    }
+  }
+
+  condition {
+    http_header {
+      http_header_name = "X-INTERNAL-SERVICE"
+      values           = ["app"]
+    }
+  }
+}

@@ -21,9 +21,3 @@ provider "aws" {
   profile = "personal"
 }
 
-module "test-cluster" {
-  source     = "./projects/container_cluster"
-  name       = "test-cluster"
-  cidr_block = "10.0.0.0/16"
-}
-
