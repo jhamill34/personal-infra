@@ -68,6 +68,8 @@ module "service-nat" {
   public_subnet_id  = module.service-subnet[count.index].public_subnet_id
 }
 
+// TODO: Create a VPC endpoint so our instances can talk to S3 without going through the NAT gateway
+
 // 5. Create an instance profile for our EC2 instances so that they can talk to ECS
 module "services-machine-role" {
   source = "../../modules/service_role"
