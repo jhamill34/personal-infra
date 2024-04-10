@@ -28,15 +28,15 @@ module "root_dns" {
   source = "./projects/root_dns"
 }
 
-module "blog_spedue_space" {
-  source         = "./modules/subdomain"
-  parent_zone_id = module.root_dns.spedue_space.zone_id
-  subdomain      = "blog.spedue.space"
-}
-
-module "blog_spedue_space_site" {
-  source  = "./modules/static_site"
-  name    = "blog-spedue-space-website"
-  domain  = "blog.spedue.space"
-  zone_id = module.blog_spedue_space.zone_id
-}
+// module "blog_spedue_space" {
+//   source         = "./modules/subdomain"
+//   parent_zone_id = module.root_dns.spedue_space.zone_id
+//   subdomain      = "blog.spedue.space"
+// }
+// 
+// module "blog_spedue_space_site" {
+//   source  = "./modules/static_site"
+//   name    = "blog-spedue-space-website"
+//   domain  = "blog.spedue.space"
+//   zone_id = module.blog_spedue_space.zone_id
+// }
