@@ -90,6 +90,13 @@ resource "aws_cloudfront_origin_access_control" "website" {
   signing_protocol                  = "sigv4"
 }
 
+resource "aws_cloudfront_function" "website_func" {
+  name    = "react-path-resolver"
+  runtime = "cloudfront-js-1.0"
+  publish = true
+  code    = file("${path.module}/functions/react-path-resolver.js")
+}
+
 resource "aws_cloudfront_distribution" "website" {
   enabled = true
 
@@ -108,6 +115,11 @@ resource "aws_cloudfront_distribution" "website" {
     cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
     target_origin_id       = local.origin_id
     viewer_protocol_policy = "redirect-to-https"
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.website_func.arn
+    }
   }
 
   restrictions {
@@ -115,18 +127,6 @@ resource "aws_cloudfront_distribution" "website" {
       restriction_type = "whitelist"
       locations        = ["US", "CA", "GB", "DE"]
     }
-  }
-
-  custom_error_response {
-    error_code         = 404
-    response_code      = 200
-    response_page_path = "/index.html"
-  }
-
-  custom_error_response {
-    error_code         = 403
-    response_code      = 200
-    response_page_path = "/index.html"
   }
 
   viewer_certificate {
