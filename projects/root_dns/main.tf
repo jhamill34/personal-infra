@@ -15,6 +15,10 @@ resource "aws_route53_zone" "jhamill_tech" {
   name = "jhamill.tech"
 }
 
+resource "aws_route53_zone" "amadahamill_art" {
+  name = "amandahamill.art"
+}
+
 output "spedue_com" {
   value = aws_route53_zone.spedue_com
 }
@@ -25,4 +29,8 @@ output "spedue_space" {
 
 output "jhamill_tech" {
   value = aws_route53_zone.jhamill_tech
+}
+
+output "amandahamill_art" {
+  value = aws_route53_zone.amadahamill_art
 }
